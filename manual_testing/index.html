@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f4f4f4;
+    }
+    .login-box {
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+      width: 340px;
+    }
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .login-box button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #007BFF;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .login-box button:hover {
+      background: #0056b3;
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .conditions {
+      font-size: 13px;
+      margin-top: 10px;
+    }
+    .valid {
+      color: green;
+    }
+    .invalid {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Login</h2>
+
+    <!-- Username -->
+    <input type="text" id="username" placeholder="Enter Username" onkeyup="checkUsernameCondition()">
+    <div class="conditions">
+      <p id="usernameCond" class="invalid">❌ Must contain only letters and numbers</p>
+      <p id="usernameLetter" class="invalid">❌ Must include at least one letter</p>
+      <p id="usernameNumber" class="invalid">❌ Must include at least one number</p>
+    </div>
+
+    <!-- Password -->
+    <input type="password" id="password" placeholder="Enter Password" onkeyup="checkPasswordConditions()">
+    <div class="conditions">
+      <p id="length" class="invalid">❌ At least 12 characters</p>
+      <p id="uppercase" class="invalid">❌ At least one uppercase letter</p>
+      <p id="number" class="invalid">❌ At least one number</p>
+      <p id="special" class="invalid">❌ At least one special character</p>
+    </div>
+
+    <button onclick="validateLogin()">Login</button>
+    <div id="errorMessage" class="error"></div>
+  </div>
+
+  <script>
+    function checkUsernameCondition() {
+      const username = document.getElementById("username").value;
+
+      const onlyLettersNumbers = /^[a-zA-Z0-9]+$/;
+      const hasLetter = /[a-zA-Z]/.test(username);
+      const hasNumber = /\d/.test(username);
+
+      const usernameCond = document.getElementById("usernameCond");
+      const usernameLetter = document.getElementById("usernameLetter");
+      const usernameNumber = document.getElementById("usernameNumber");
+
+      // Check only letters and numbers
+      if (username.length > 0 && onlyLettersNumbers.test(username)) {
+        usernameCond.className = "valid";
+        usernameCond.textContent = "✅ Only letters and numbers allowed";
+      } else {
+        usernameCond.className = "invalid";
+        usernameCond.textContent = "❌ Must contain only letters and numbers";
+      }
+
+      // Must include at least one letter
+      if (hasLetter) {
+        usernameLetter.className = "valid";
+        usernameLetter.textContent = "✅ Contains at least one letter";
+      } else {
+        usernameLetter.className = "invalid";
+        usernameLetter.textContent = "❌ Must include at least one letter";
+      }
+
+      // Must include at least one number
+      if (hasNumber) {
+        usernameNumber.className = "valid";
+        usernameNumber.textContent = "✅ Contains at least one number";
+      } else {
+        usernameNumber.className = "invalid";
+        usernameNumber.textContent = "❌ Must include at least one number";
+      }
+    }
+
+    function checkPasswordConditions() {
+      const password = document.getElementById("password").value;
+
+      document.getElementById("length").className = password.length >= 12 ? "valid" : "invalid";
+      document.getElementById("length").textContent = (password.length >= 12 ? "✅" : "❌") + " At least 12 characters";
+
+      document.getElementById("uppercase").className = /[A-Z]/.test(password) ? "valid" : "invalid";
+      document.getElementById("uppercase").textContent = (/[A-Z]/.test(password) ? "✅" : "❌") + " At least one uppercase letter";
+
+      document.getElementById("number").className = /\d/.test(password) ? "valid" : "invalid";
+      document.getElementById("number").textContent = (/\d/.test(password) ? "✅" : "❌") + " At least one number";
+
+      document.getElementById("special").className = /[\W_]/.test(password) ? "valid" : "invalid";
+      document.getElementById("special").textContent = (/[\W_]/.test(password) ? "✅" : "❌") + " At least one special character";
+    }
+
+    function validateLogin() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorMessage = document.getElementById("errorMessage");
+
+      const usernameRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z0-9]+$/;
+      const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$/;
+
+      if (!usernameRegex.test(username)) {
+        errorMessage.textContent = "Invalid username: must include at least one letter and one number, and only contain letters and numbers.";
+        errorMessage.style.color = "red";
+        return;
+      }
+
+      if (!passwordRegex.test(password)) {
+        errorMessage.textContent = "Weak password. Check the conditions above.";
+        errorMessage.style.color = "red";
+        return;
+      }
+
+      errorMessage.style.color = "green";
+      errorMessage.textContent = "Login successful!";
+    }
+  </script>
+</body>
+</html>
+/
